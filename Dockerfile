@@ -1,6 +1,6 @@
 # 
 # cs140a - Docker environment for ECS140A
-# Copyright (C) 2019  lxylxy123456
+# Copyright (C) 2020  lxylxy123456
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -16,36 +16,46 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # 
 
-# FROM golang AS golang
-FROM golang:1.11.4 AS golang
-
-FROM nacyot/commonlisp-clisp:apt AS clisp
-
-# FROM swipl:stable AS swipl
-FROM swipl:7.6.4 AS swipl
-
-FROM python:3.8.2-buster
+# Install Go 1.14.4
+FROM golang:1.14.4-buster
 LABEL maintainer="ercli@ucdavis.edu"
 
-COPY --from=golang /usr/local/go/ /usr/local/go/
-COPY --from=clisp /usr/bin/clisp* /usr/bin/
-COPY --from=clisp /usr/lib/clisp-2.49/ /usr/lib/clisp-2.49/
-COPY --from=swipl /usr/bin/swipl* /usr/bin/
-COPY --from=swipl /usr/lib/swipl/ /usr/lib/swipl/
-ENV PATH="/usr/local/go/bin:$PATH"
-COPY --from=clisp /lib/x86_64-linux-gnu/ /clisp/
-COPY --from=swipl /lib/x86_64-linux-gnu/ /swipl/
-RUN mv -n /clisp/* /swipl/* /lib/x86_64-linux-gnu/; rm -rf /clisp/ /swipl/
-COPY --from=clisp /usr/lib/ /clisp/
-COPY --from=swipl /usr/lib/ /swipl/
-RUN mv -n /clisp/* /swipl/* /usr/lib/; rm -rf /clisp/ /swipl/
-COPY --from=clisp /usr/lib/x86_64-linux-gnu/ /clisp/
-COPY --from=swipl /usr/lib/x86_64-linux-gnu/ /swipl/
-RUN mv -n /clisp/* /swipl/* /usr/lib/x86_64-linux-gnu/; rm -rf /clisp/ /swipl/
-
+# Install Common Lisp 2.49
+# Install SWI-Prolog 7.6.4
+# apt-get first line: clisp
+# apt-get second line: some useful tools
+# apt-get other lines: prerequisits for building swipl
 RUN apt-get update; \
-	apt-get install vim nano tmux screen gawk less -y; \
-	apt-get clean; \
-	ln -sf python2 `which python`
+    apt-get install -y \
+            clisp \
+            vim nano tmux screen gawk less python3 zip \
+            build-essential cmake ninja-build pkg-config \
+            ncurses-dev libreadline-dev libedit-dev \
+            libgoogle-perftools-dev \
+            libunwind-dev \
+            libgmp-dev \
+            libssl-dev \
+            unixodbc-dev \
+            zlib1g-dev libarchive-dev \
+            libossp-uuid-dev \
+            libxext-dev libice-dev libjpeg-dev libxinerama-dev libxft-dev \
+            libxpm-dev libxt-dev \
+            libdb-dev \
+            libpcre3-dev \
+            libyaml-dev \
+            default-jdk junit; \
+    apt-get clean; \
+    curl https://www.swi-prolog.org/download/stable/src/swipl-7.6.4.tar.gz | \
+        tar -zxf -; \
+    cd swipl-7.6.4; \
+    ./configure; \
+    make; \
+    make install; \
+    cd packages; \
+    ./configure; \
+    make; \
+    make install; \
+    cd ../..; \
+    rm -rf swipl-7.6.4; \
+    ln -s /usr/local/bin/swipl /usr/bin/swipl
 
-CMD ["/bin/bash"]

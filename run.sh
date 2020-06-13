@@ -1,7 +1,7 @@
 #!/bin/bash
 # 
 # cs140a - Docker environment for ECS140A
-# Copyright (C) 2019  lxylxy123456
+# Copyright (C) 2020  lxylxy123456
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -16,5 +16,5 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # 
-docker run $@ --rm -it lxylxy123456/cs140a:s20
+docker run $@ --rm -it lxylxy123456/cs140a:testing
 # --network none
