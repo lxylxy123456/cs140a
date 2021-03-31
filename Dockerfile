@@ -16,8 +16,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # 
 
-# Install Go 1.14.4
-FROM golang:1.14.4-buster
+# Install Go 1.11.4
+FROM golang:1.11.4-stretch
 LABEL maintainer="ercli@ucdavis.edu"
 
 # Install Common Lisp 2.49
