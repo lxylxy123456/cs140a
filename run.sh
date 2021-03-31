@@ -16,5 +16,5 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # 
-docker run $@ --rm -it lxylxy123456/cs140a:testing
+docker run $@ --rm -it lxylxy123456/cs140a:s21
 # --network none

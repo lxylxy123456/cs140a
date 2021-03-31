@@ -17,4 +17,4 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # 
 docker login
-docker push lxylxy123456/cs140a:testing
+docker push lxylxy123456/cs140a:s21
